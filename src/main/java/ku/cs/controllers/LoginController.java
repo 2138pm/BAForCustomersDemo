@@ -1,16 +1,12 @@
 package ku.cs.controllers;
 
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.PasswordField;
 import ku.cs.models.Customer;
 import ku.cs.models.CustomerList;
-import ku.cs.services.CustomerHardCodeDatasource;
 import ku.cs.services.CustomerListFileDatasource;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
@@ -43,8 +39,10 @@ public class LoginController {
         }
 
         try {
-            Customer customer = customerList.authen(username, password);
-            FXRouter.goTo("customer-profile", customer);
+            Customer customer = customerList.authenForLogin(username, password);
+            FXRouter.setData("customer", customer);
+            FXRouter.goTo("services", customer);
+
         } catch (AuthenticationFailedException e) {
             errorLabel.setText(e.getMessage());
         } catch (IOException e) {
@@ -55,7 +53,7 @@ public class LoginController {
     @FXML
     public void onBackButtonClick() {
         try {
-            FXRouter.goTo("services");
+            FXRouter.goTo("hello");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -64,7 +62,7 @@ public class LoginController {
     @FXML
     public void onSignInButtonClick() {
         try {
-            FXRouter.goTo("customer-profile");
+            FXRouter.goTo("services");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

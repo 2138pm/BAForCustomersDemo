@@ -21,12 +21,14 @@ public class HelloApplication extends Application {
         String viewPath = "ku/cs/views/";
         FXRouter.when("hello", viewPath + "hello-view.fxml");
         FXRouter.when("services", viewPath + "services.fxml");
-        FXRouter.when("customer-profile", viewPath + "customer.fxml");
+        FXRouter.when("customer", viewPath + "customer.fxml");
         FXRouter.when("customer-list", viewPath + "customer-list.fxml");
         FXRouter.when("login", viewPath + "login.fxml");
         FXRouter.when("register", viewPath + "register.fxml");
         FXRouter.when("summary", viewPath + "summary.fxml");
         FXRouter.when("transfer", viewPath + "transfer.fxml");
+        FXRouter.when("confirm", viewPath + "confirm.fxml");
+        FXRouter.when("customer-profile", viewPath + "customer-profile.fxml");
     }
 
     public static void main(String[] args) {

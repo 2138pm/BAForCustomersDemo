@@ -22,7 +22,7 @@ public class Customer {
     }
 
     public boolean check(String username, String password){
-        return this.username.equals(username) || this.password.equals(password);
+        return this.username.equals(username) && this.password.equals(password);
     }
 
     public boolean check(String username){

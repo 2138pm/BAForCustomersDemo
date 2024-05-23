@@ -6,10 +6,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import javafx.util.Duration;
+import ku.cs.models.Customer;
 
 import java.io.IOException;
 import java.util.AbstractMap;
 import java.util.HashMap;
+import java.util.Map;
 
 public final class FXRouter {
     private static final String WINDOW_TITLE = "";
@@ -26,6 +28,9 @@ public final class FXRouter {
     private static Double animationDuration;
     private static AbstractMap<String, RouteScene> routes = new HashMap();
     private static RouteScene currentRoute;
+    private static final Map<String, String> VIEW_PATHS = new HashMap<>();
+    private static final Map<String, Object> DATA = new HashMap<>();
+    private static Stage stage;
 
     private FXRouter() {
     }
@@ -188,6 +193,22 @@ public final class FXRouter {
         private static double getWindowHeight() {
             return FXRouter.windowHeight != null ? FXRouter.windowHeight : FXRouter.WINDOW_HEIGHT;
         }
+    }
+
+    public static void setStage(Stage primaryStage) {
+        stage = primaryStage;
+    }
+
+    public static void setData(String key, Object value) {
+        DATA.put(key, value);
+    }
+
+    public static Object getData(String key) {
+        return DATA.get(key);
+    }
+
+    public static void setData(Object data) {
+        currentRoute.data = data;
     }
 }
 

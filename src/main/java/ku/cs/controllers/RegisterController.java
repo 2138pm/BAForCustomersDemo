@@ -3,10 +3,12 @@ package ku.cs.controllers;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import ku.cs.models.Customer;
 import ku.cs.models.CustomerList;
 import ku.cs.services.CustomerListFileDatasource;
 import ku.cs.services.Datasource;
 import ku.cs.services.FXRouter;
+import ku.cs.services.exception.AuthenticationFailedException;
 
 import java.io.IOException;
 
@@ -36,8 +38,6 @@ public class RegisterController {
         String balanceString = balanceTextField.getText();
 
 
-
-
         if(idTextField.getText().isEmpty() || usernameTextField.getText().isEmpty() ||
                 passwordTextField.getText().isEmpty() || balanceTextField.getText().isEmpty()){
             errorLabel.setText("Please enter your data.");
@@ -54,11 +54,17 @@ public class RegisterController {
             errorLabel.setText("balance must be positive number");
             return;
         }
+        try {
+            customerList.addNewCustomer(id, username, password, balance);
+            Customer customer = customerList.authenForLogin(username, password);
+            datasource.writeData(customerList);
+            FXRouter.goTo("customer-profile", customer);
+        } catch (AuthenticationFailedException e) {
+            errorLabel.setText(e.getMessage());
+        } catch (IOException e) {
+            throw new RuntimeException();
+        }
 
-        customerList.addNewCustomer(id, username, password, balance);
-        datasource.writeData(customerList);
-        onSignUpButtonClick();
-        FXRouter.goTo("customer-list");
     }
 
     @FXML public void onBackButtonClick(){

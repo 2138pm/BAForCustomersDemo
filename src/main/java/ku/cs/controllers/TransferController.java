@@ -17,10 +17,22 @@ public class TransferController {
     @FXML private TextField usernameTextField;
     @FXML private TextField amountTextField;
     @FXML private Label errorLabel;
+    @FXML private Label  nameLabel;
+    @FXML private Label  balanceLabel;
 
     private Datasource<CustomerList> datasource;
     private CustomerList customerList;
     private Customer customer;
+
+
+    @FXML
+    public void initialize() throws IOException {
+        datasource = new CustomerListFileDatasource("data", "customer-list.csv");
+        customerList = datasource.readData();
+        customer = (Customer) FXRouter.getData();
+        //showCustomer(customer);
+
+    }
 
     @FXML public void onOKButtonClick(ActionEvent e) throws IOException{
         checkUsername();
@@ -30,7 +42,6 @@ public class TransferController {
         Datasource<CustomerList> datasource = new CustomerListFileDatasource("data", "customer-list.csv");
         customerList = datasource.readData();
         customer = (Customer) FXRouter.getData();
-
 
         errorLabel.setText("");
         String username = usernameTextField.getText();
@@ -47,20 +58,35 @@ public class TransferController {
         }
 
         try {
-            Customer customer = customerList.authen(username);
+            Customer customer2 = customerList.authen(username);
             double amount = Double.parseDouble(amountString);
+
+
             if (amount < 0) {
                 errorLabel.setText("Amount must be positive number");
                 return;
             }
             errorLabel.setText("");
-            customerList.giveBalanceToUsername(customer.getName(), amount);
+            // ส่งข้อมูลผู้ที่โอนเงิน, จำนวนเงินที่โอน, และผู้รับเงินไปยัง ConfirmTransferController
+            FXRouter.setData("sender", customer);
+            FXRouter.setData("amount", amount);
+            FXRouter.setData("receiver", customer2);
+
+            // นำข้อมูลไปยังหน้า ConfirmTransferController
+            //FXRouter.goTo("confirm");
+
 
             amountTextField.clear();
 
-            datasource.writeData(customerList);
+            customerList.reduceBalanceFromUsername(customer.getName(), amount);
+            customerList.giveBalanceToId(customer2.getId(), amount);
 
-            FXRouter.goTo("customer-profile", customer);
+
+
+            datasource.writeData(customerList);
+            FXRouter.goTo("confirm");
+
+
         } catch (AuthenticationFailedException e) {
             errorLabel.setText(e.getMessage());
         } catch (IOException e) {
@@ -68,12 +94,16 @@ public class TransferController {
         }
     }
 
+    private void showCustomer(Customer customer) {
+        nameLabel.setText(customer.getName());
+        balanceLabel.setText("" + customer.getBalance());
+    }
 
 
     @FXML
     public void onBackButtonClick() {
         try {
-            FXRouter.goTo("customer-profile");
+            FXRouter.goTo("customer");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

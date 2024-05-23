@@ -33,7 +33,7 @@ public class CustomerList {
         }
     }
 
-    public Customer authen(String username, String password){
+    public Customer authenForLogin(String username, String password){
         for(Customer customer: customers){
             if(customer.check(username, password)){
                 return customer;
@@ -62,13 +62,6 @@ public class CustomerList {
 
     public void giveBalanceToId(String id, double balance) {
         Customer exist = findCustomerById(id);
-        if (exist != null) {
-            exist.addBalance(balance);
-        }
-    }
-
-    public void giveBalanceToUsername(String username, double balance) {
-        Customer exist = findCustomerByUsername(username);
         if (exist != null) {
             exist.addBalance(balance);
         }

@@ -22,10 +22,10 @@ public class SummaryController {
     @FXML
     public void initialize() {
         datasource = new CustomerListFileDatasource("data", "customer-list.csv");
-        //Customer customer = new Customer("6410400001", "Tony Stark", "Tony");
         customerList = datasource.readData();
         customer = (Customer) FXRouter.getData();
         showCustomer(customer);
+
     }
 
     private void showCustomer(Customer customer) {
